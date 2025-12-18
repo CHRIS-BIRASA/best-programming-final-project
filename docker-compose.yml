@@ -1,0 +1,34 @@
+services:
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_ROOT_PASSWORD: ?Born20.
+      MYSQL_DATABASE: cargo_fuel_tracker_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - ./database_setup.sql:/docker-entrypoint-initdb.d/setup.sql
+      - mysql_data:/var/lib/mysql
+    networks:
+      - app-network
+
+  app:
+    build: .
+    depends_on:
+      - mysql
+    environment:
+      DISPLAY: host.docker.internal:0
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_NAME: cargo_fuel_tracker_db
+    volumes:
+      - /tmp/.X11-unix:/tmp/.X11-unix:rw
+    networks:
+      - app-network
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
+    driver: bridge

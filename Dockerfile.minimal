@@ -1,0 +1,10 @@
+FROM eclipse-temurin:11-jdk
+
+WORKDIR /app
+COPY src/ /app/src/
+COPY lib/mysql-connector-j-8.2.0.jar /app/lib/
+
+RUN javac -cp "/app/lib/mysql-connector-j-8.2.0.jar" -d /app /app/src/*/*.java
+
+ENV CLASSPATH="/app:/app/lib/mysql-connector-j-8.2.0.jar"
+CMD ["java", "-cp", "/app:/app/lib/mysql-connector-j-8.2.0.jar", "view.Main"]
